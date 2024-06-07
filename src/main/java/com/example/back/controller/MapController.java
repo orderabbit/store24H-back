@@ -1,7 +1,6 @@
 package com.example.back.controller;
 
-import com.example.back.dto.response.map.GetMapResponseDto;
-import com.example.back.service.NaverMapService;
+import com.example.back.service.KakaoMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,12 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MapController {
 
-    private final NaverMapService naverMapService;
+    private final KakaoMapService kakaoMapService;
 
     @GetMapping("/search")
-    public ResponseEntity<? super GetMapResponseDto> getMapData(@RequestParam String query) {
-        ResponseEntity<? super GetMapResponseDto> response = naverMapService.getMapData(query);
-        return response;
+    public String searchPlaces(@RequestParam double lat, @RequestParam double lng, @RequestParam String query) {
+        ResponseEntity<String> response = kakaoMapService.searchPlace(lat, lng, query);
+        return response.getBody();
     }
 }
-
