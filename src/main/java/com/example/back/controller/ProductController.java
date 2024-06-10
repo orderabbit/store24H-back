@@ -1,5 +1,6 @@
 package com.example.back.controller;
 
+import com.example.back.dto.response.product.DeleteProductResponseDto;
 import com.example.back.dto.response.product.ListProductResponseDto;
 import com.example.back.dto.response.product.SaveProductResponseDto;
 import com.example.back.dto.response.product.SearchProductResponseDto;
@@ -7,6 +8,7 @@ import com.example.back.entity.ProductEntity;
 import com.example.back.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,6 +36,15 @@ public class ProductController {
             @PathVariable("userId") String userId
     ){
         ResponseEntity<? super ListProductResponseDto> response = productService.getUserCartList(userId);
+        return response;
+    }
+
+    @DeleteMapping("/delete/{productId}")
+    public ResponseEntity<? super DeleteProductResponseDto> deleteBoard(
+            @PathVariable("productId") Long productId,
+            @AuthenticationPrincipal String userId
+    ) {
+        ResponseEntity<? super DeleteProductResponseDto> response = productService.deleteProduct(productId);
         return response;
     }
 }
