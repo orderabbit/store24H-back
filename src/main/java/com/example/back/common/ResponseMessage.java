@@ -17,12 +17,13 @@ public interface ResponseMessage {
 
     String NOT_EXISTED_USER = "Not Existed User";
     String NOT_EXISTED_PRODUCT = "Not Existed Product";
-
+    String NOT_EXISTED_ANSWER = "Not Existed Answer";
+    String NOT_EXISTED_QUESTION = "Not Existed Question";
     String WRONG_PASSWORD = "Wrong Password";
     String DO_NOT_HAVE_PERMISSION = "Do Not Have Permission";
 
     String DUPLICATED_TITLE = "Duplicate Title";
     String DUPLICATED_PRODUCT = "Duplicate Product";
     String DUPLICATED_ORDER = "Duplicate Order";
-    String DUPLICATED_PHONE_NUMBER = "Duplicate Phone Number";
+    String EMPTY_ORDER = "Empty Order";
 }

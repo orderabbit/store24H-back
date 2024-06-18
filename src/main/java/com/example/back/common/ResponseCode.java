@@ -19,11 +19,14 @@ public interface ResponseCode {
     String NOT_EXISTED_USER = "NU";
     String NOT_EXISTED_PRODUCT = "NP";
 
+    String NOT_EXISTED_ANSWER = "NA";
+    String NOT_EXISTED_QUESTION = "NQ";
+
     String WRONG_PASSWORD = "WP";
     String DO_NOT_HAVE_PERMISSION = "NP";
 
     String DUPLICATED_TITLE = "DT";
     String DUPLICATED_PRODUCT = "DP";
     String DUPLICATED_ORDER = "DO";
-    String DUPLECATED_PHONE_NUMBER = "DPN";
+    String EMPTY_ORDER = "EO";
 }
