@@ -2,10 +2,11 @@ package com.example.back.service.implement;
 
 import com.example.back.dto.response.ResponseDto;
 import com.example.back.dto.response.payment.PaymentResponseDto;
+import com.example.back.entity.CartEntity;
 import com.example.back.entity.PaymentEntity;
-import com.example.back.entity.ProductEntity;
+import com.example.back.repository.CartRepository;
+import com.example.back.repository.OrderListRepository;
 import com.example.back.repository.PaymentRepository;
-import com.example.back.repository.ProductRepository;
 import com.example.back.service.PaymentService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -37,7 +38,8 @@ public class PaymentServiceImplement implements PaymentService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final PaymentRepository paymentRepository;
-    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final OrderListRepository orderListRepository;
     private final ObjectMapper objectMapper;
 
     @Override
@@ -47,7 +49,6 @@ public class PaymentServiceImplement implements PaymentService {
         String amountStr;
         String paymentKey;
         try {
-            // 클라이언트에서 받은 JSON 요청 바디입니다.
             JSONObject requestData = (JSONObject) parser.parse(jsonBody);
             paymentKey = (String) requestData.get("paymentKey");
             orderId = (String) requestData.get("orderId");
@@ -69,12 +70,10 @@ public class PaymentServiceImplement implements PaymentService {
 
         String widgetSecretKey = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
 
-        // 토스페이먼츠 API는 시크릿 키를 사용자 ID로 사용하고, 비밀번호는 사용하지 않습니다.
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] encodedBytes = encoder.encode((widgetSecretKey + ":").getBytes(StandardCharsets.UTF_8));
         String authorizations = "Basic " + new String(encodedBytes);
 
-        // 결제 승인 API를 호출합니다.
         URL url = new URL("https://api.tosspayments.com/v1/payments/confirm");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestProperty("Authorization", authorizations);
@@ -110,7 +109,8 @@ public class PaymentServiceImplement implements PaymentService {
         List<Long> productIds;
         try {
             String productIdsStr = ((String) paymentInfo.get("productIds")).trim();
-            productIds = objectMapper.readValue(productIdsStr, new TypeReference<List<Long>>() {});
+            productIds = objectMapper.readValue(productIdsStr, new TypeReference<List<Long>>() {
+            });
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return ResponseDto.validationFail();
@@ -120,8 +120,8 @@ public class PaymentServiceImplement implements PaymentService {
             return PaymentResponseDto.duplicatedOrder();
         }
         PaymentEntity paymentEntity = new PaymentEntity();
-        List<ProductEntity> productEntities = new ArrayList<>();
-        try{
+        List<CartEntity> productEntities = new ArrayList<>();
+        try {
             paymentEntity.setOrderId(orderId);
             paymentEntity.setCustomerId(customerId);
             paymentEntity.setCustomerName(customerName);
@@ -135,11 +135,11 @@ public class PaymentServiceImplement implements PaymentService {
             paymentRepository.save(paymentEntity);
 
             for (Long productId : productIds) {
-                Optional<ProductEntity> productEntityOptional = productRepository.findById(productId);
+                Optional<CartEntity> productEntityOptional = cartRepository.findById(productId);
                 productEntityOptional.ifPresent(productEntities::add);
             }
-            productRepository.deleteAll(productEntities);
-        }catch (Exception exception){
+            cartRepository.deleteAll(productEntities);
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
