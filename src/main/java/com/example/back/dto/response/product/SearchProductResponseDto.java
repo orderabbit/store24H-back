@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @Getter
-public class SearchProductResponseDto extends ResponseDto {
+public class  SearchProductResponseDto extends ResponseDto {
 
     private List<ProductListItem> searchList;
 
@@ -24,5 +24,10 @@ public class SearchProductResponseDto extends ResponseDto {
     public static ResponseEntity<SearchProductResponseDto> success(List<ProductListViewEntity> productListViewEntities){
         SearchProductResponseDto responseBody = new SearchProductResponseDto(productListViewEntities);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
+    }
+
+    public static ResponseEntity<ResponseDto> notExistedProduct(){
+        ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_PRODUCT, ResponseMessage.NOT_EXISTED_PRODUCT);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }
 }
