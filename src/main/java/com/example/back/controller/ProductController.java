@@ -37,7 +37,7 @@ public class ProductController {
         return response;
     }
 
-    @PatchMapping("/{reviewNumber}/feels}")
+    @PatchMapping("/{reviewNumber}/feels")
     public ResponseEntity<? super PatchReviewResponseDto> PatchReview(
             @PathVariable("reviewNumber") int reviewNumber,
             @RequestParam("feels") String isLike,

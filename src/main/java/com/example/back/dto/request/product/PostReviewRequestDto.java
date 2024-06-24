@@ -12,4 +12,5 @@ public class PostReviewRequestDto {
 
     @NotBlank
     private String review;
+    private int rates;
 }

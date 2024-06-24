@@ -215,7 +215,7 @@ public class ProductServiceImplement implements ProductService {
             reviewEntity = reviewOptional.get();
 
             List<String> list;
-            if(isLike == "true") { list = reviewEntity.getLike(); }
+            if(isLike == "true") { list = reviewEntity.getLiked(); }
             else  { list = reviewEntity.getDislike(); }
 
             boolean existedUser = userRepository.existsByUserId(userId);

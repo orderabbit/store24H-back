@@ -27,7 +27,7 @@ public class ReviewEntity {
     private String userId;
     private String productId;
     private int rates;
-    private List<String> like;
+    private List<String> liked;
     private List<String> dislike;
 
     public ReviewEntity(PostReviewRequestDto dto, String productId, String userId) {
@@ -41,8 +41,8 @@ public class ReviewEntity {
         this.userId = userId;
         this.productId = productId;
 
-        rates = 0;
-        like = new ArrayList<>();
+        rates = dto.getRates();
+        liked = new ArrayList<>();
         dislike = new ArrayList<>();
     }
 }
