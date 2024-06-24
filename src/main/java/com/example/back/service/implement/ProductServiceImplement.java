@@ -5,10 +5,8 @@ import com.example.back.dto.request.product.PostProductRequestDto;
 import com.example.back.dto.request.product.PostReviewRequestDto;
 import com.example.back.dto.response.ResponseDto;
 import com.example.back.dto.response.product.*;
-import com.example.back.entity.ImageEntity;
-import com.example.back.entity.ProductEntity;
-import com.example.back.entity.ProductListViewEntity;
-import com.example.back.entity.ReviewEntity;
+import com.example.back.dto.response.user.GetUserResponseDto;
+import com.example.back.entity.*;
 import com.example.back.repository.*;
 import com.example.back.repository.resultSet.GetProductResultSet;
 import com.example.back.repository.resultSet.GetReviewListResultSet;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -205,5 +204,42 @@ public class ProductServiceImplement implements ProductService {
             return ResponseDto.databaseError();
         }
         return DeleteProductResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId, String isLike, String isActive) {
+        ReviewEntity reviewEntity;
+        try {
+            Optional<ReviewEntity> reviewOptional = reviewRepository.findBtReviewNumber(reviewNumber);
+            if(reviewOptional.isEmpty()) return PatchReviewResponseDto.notExistProduct();
+            reviewEntity = reviewOptional.get();
+
+            List<String> list;
+            if(isLike == "true") { list = reviewEntity.getLike(); }
+            else  { list = reviewEntity.getDislike(); }
+
+            boolean existedUser = userRepository.existsByUserId(userId);
+            if(!existedUser) return GetUserResponseDto.notExistUser();
+            UserEntity userEntity = userRepository.findByUserId(userId);
+
+            for (String element : list) {
+                if (element.equals(userEntity.getUserId())) {
+                    boolean existedLike = userRepository.existsByUserId(element);
+                    if(!existedLike) return GetUserResponseDto.notExistUser();
+                    UserEntity likeUser = userRepository.findByUserId(element);
+
+                    if(isActive == "true") {
+                        list.remove(element);
+                        break;
+                    }
+                    list.add(element);
+                    break;
+                }
+            }
+        }
+        catch(Exception e) {
+            return ResponseDto.databaseError();
+        }
+        return PatchReviewResponseDto.success();
     }
 }

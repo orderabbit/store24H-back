@@ -37,12 +37,23 @@ public class ProductController {
         return response;
     }
 
+    @PatchMapping("/{reviewNumber}/feels}")
+    public ResponseEntity<? super PatchReviewResponseDto> PatchReview(
+            @PathVariable("reviewNumber") int reviewNumber,
+            @RequestParam("feels") String isLike,
+            @RequestParam("isActive") String isActive,
+            @AuthenticationPrincipal String userId
+    ) {
+        ResponseEntity<? super PatchReviewResponseDto> response = productService.patchReview(reviewNumber, userId, isLike, isActive);
+        return response;
+    }
+
     @GetMapping("/{productId}/review-list")
     public ResponseEntity<? super GetReviewResponseDto> getCommentList(
-            @PathVariable("productId") String produtId
+            @PathVariable("productId") String productId
     ) {
-        ResponseEntity<? super GetReviewResponseDto> reponse = productService.getReviewList(produtId);
-        return reponse;
+        ResponseEntity<? super GetReviewResponseDto> response = productService.getReviewList(productId);
+        return response;
     }
 
     @GetMapping(value = {"/search"})

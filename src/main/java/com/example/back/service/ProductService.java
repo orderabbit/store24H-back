@@ -14,4 +14,5 @@ public interface ProductService {
     ResponseEntity<? super PatchProductResponseDto> patchProduct(PatchProductRequestDto dto, String productId, String userId);
     ResponseEntity<? super PostReviewResponseDto> postReview(PostReviewRequestDto dto, String productId, String userId);
     ResponseEntity<? super DeleteProductResponseDto> deleteProduct(String productId, String userId);
+    ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId,String isLike, String isActive);
 }
