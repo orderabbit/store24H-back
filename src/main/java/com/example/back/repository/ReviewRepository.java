@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
 
-    Optional<ReviewEntity> findBtReviewNumber(int reviewNumber);
+    Optional<ReviewEntity> findByReviewNumber(int reviewNumber);
     @Query(
             value=
                     "SELECT " +

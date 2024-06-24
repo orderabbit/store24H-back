@@ -210,7 +210,7 @@ public class ProductServiceImplement implements ProductService {
     public ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId, String isLike, String isActive) {
         ReviewEntity reviewEntity;
         try {
-            Optional<ReviewEntity> reviewOptional = reviewRepository.findBtReviewNumber(reviewNumber);
+            Optional<ReviewEntity> reviewOptional = reviewRepository.findByReviewNumber(reviewNumber);
             if(reviewOptional.isEmpty()) return PatchReviewResponseDto.notExistProduct();
             reviewEntity = reviewOptional.get();
 
