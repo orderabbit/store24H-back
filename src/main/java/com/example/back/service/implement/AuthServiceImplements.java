@@ -162,8 +162,72 @@ public class AuthServiceImplements implements AuthService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-
         return SignInResponseDto.success(token);
+    }
+
+    @Override
+    public ResponseEntity<? super AdminSignUpResponseDto> adminSignUp(AdminSignUpRequestDto dto) {
+        try {
+            String userId = dto.getUserId();
+            boolean isExistId = userRepository.existsByUserId(userId);
+            if (isExistId) return AdminSignUpResponseDto.duplicateId();
+
+            String email = dto.getEmail();
+            boolean isExistedEmail = userRepository.existsByEmail(email);
+            if(isExistedEmail) return AdminSignUpResponseDto.duplicatedEmail();
+
+            String nickname = dto.getNickname();
+            boolean isExistNickname = userRepository.existsByNickname(nickname);
+            if(isExistNickname) return AdminSignUpResponseDto.duplicatedNickname();
+
+            String certificationNumber = dto.getCertificationNumber();
+            CertificationEntity certificationEntity = certificationRepository.findByUserId(userId);
+            boolean isMatched = certificationEntity.getEmail().equals(email) &&
+                    certificationEntity.getCertificationNumber().equals(certificationNumber);
+            if (!isMatched) return AdminSignUpResponseDto.certificationFail();
+
+            String secretKey = dto.getSecretKey();
+            if(!secretKey.equals("1234")) return AdminSignUpResponseDto.noPermission();
+
+            String password = dto.getPassword();
+            String encodedPassword = passwordEncoder.encode(password);
+            dto.setPassword(encodedPassword);
+
+            UserEntity userEntity = new UserEntity(dto);
+            userRepository.save(userEntity);
+
+            certificationRepository.deleteByUserId(userId);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return AdminSignUpResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super AdminSignInResponseDto> adminSignIn(AdminSignInRequestDto dto) {
+        String token = null;
+        try{
+            String userId = dto.getUserId();
+            UserEntity userEntity = userRepository.findByUserId(userId);
+            if(userEntity == null) return AdminSignInResponseDto.SignInFail();
+
+            String password = dto.getPassword();
+            String encodedPassword = userEntity.getPassword();
+            boolean isMatched = passwordEncoder.matches(password, encodedPassword);
+            if(!isMatched) return AdminSignInResponseDto.SignInFail();
+
+            String secretKey = dto.getSecretKey();
+            if(!secretKey.equals("1234")) return AdminSignInResponseDto.noPermission();
+
+            token = jwtProvider.create(userId);
+
+        }catch(Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return AdminSignInResponseDto.success(token);
     }
 
     private String getCertificationNumber() {

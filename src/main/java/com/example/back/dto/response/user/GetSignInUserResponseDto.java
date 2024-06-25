@@ -13,9 +13,9 @@ public class GetSignInUserResponseDto extends ResponseDto {
 
     private String userId;
     private String email;
-    private String password;
     private String nickname;
     private String profileImage;
+    private String role;
 
     private GetSignInUserResponseDto(UserEntity userEntity){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
@@ -23,7 +23,7 @@ public class GetSignInUserResponseDto extends ResponseDto {
         this.email = userEntity.getEmail();
         this.nickname = userEntity.getNickname();
         this.profileImage = userEntity.getProfileImage();
-        this.password = userEntity.getPassword();
+        this.role = userEntity.getRole();
     }
 
     public static ResponseEntity<GetSignInUserResponseDto> success(UserEntity userEntity){
