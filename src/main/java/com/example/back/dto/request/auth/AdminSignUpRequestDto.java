@@ -12,8 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequestDto {
-
+public class AdminSignUpRequestDto {
     @NotBlank
     private String userId;
     @NotBlank
@@ -26,4 +25,6 @@ public class SignUpRequestDto {
     private String nickname;
     @NotBlank
     private String certificationNumber;
+    @NotBlank
+    private String secretKey;
 }
