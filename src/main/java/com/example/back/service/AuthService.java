@@ -2,7 +2,6 @@ package com.example.back.service;
 
 import com.example.back.dto.request.auth.*;
 import com.example.back.dto.response.auth.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +16,7 @@ public interface AuthService {
     ResponseEntity<? super CheckCertificationResponseDto> checkCertification(CheckCertificationRequestDto dto);
     ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto);
     ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto);
+    ResponseEntity<? super AdminSignUpResponseDto> adminSignUp(AdminSignUpRequestDto dto);
+    ResponseEntity<? super AdminSignInResponseDto> adminSignIn(AdminSignInRequestDto dto);
 
 }

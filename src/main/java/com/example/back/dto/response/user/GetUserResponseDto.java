@@ -17,7 +17,7 @@ public class GetUserResponseDto extends ResponseDto {
     private String email;
     private String password;
     private String nickname;
-    private String profileImage;
+    private String role;
     private boolean socialUser;
 
     private GetUserResponseDto(UserEntity userEntity) {
@@ -25,8 +25,8 @@ public class GetUserResponseDto extends ResponseDto {
         this.userId = userEntity.getUserId();
         this.email = userEntity.getEmail();
         this.nickname = userEntity.getNickname();
-        this.profileImage = userEntity.getProfileImage();
         this.password = userEntity.getPassword();
+        this.role = userEntity.getRole();
         this.socialUser = userEntity.isSocialUser();
     }
 

@@ -73,4 +73,20 @@ public class AuthController {
         ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
         return response;
     }
+
+    @PostMapping("/admin-sign-up")
+    public ResponseEntity<? super AdminSignUpResponseDto> adminSignUp(
+            @RequestBody @Valid AdminSignUpRequestDto requestBody
+    ) {
+        ResponseEntity<? super AdminSignUpResponseDto> response = authService.adminSignUp(requestBody);
+        return response;
+    }
+
+    @PostMapping("/admin-sign-in")
+    public ResponseEntity<? super AdminSignInResponseDto> adminSignIn(
+            @RequestBody @Valid AdminSignInRequestDto requestBody
+    ) {
+        ResponseEntity<? super AdminSignInResponseDto> response = authService.adminSignIn(requestBody);
+        return response;
+    }
 }
