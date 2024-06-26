@@ -1,5 +1,7 @@
 package com.example.back.entity;
 
+import com.example.back.dto.request.product.PostProductRequestDto;
+import com.example.back.dto.response.product.PostProductResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -53,4 +55,5 @@ public class ProductListViewEntity {
     public List<String> getSecondaryImage() {
         return List.of(secondaryImage.split(","));
     }
+
 }

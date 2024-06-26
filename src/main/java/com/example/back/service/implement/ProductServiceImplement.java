@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -207,35 +208,57 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId, String isLike, String isActive) {
-        ReviewEntity reviewEntity;
+    public ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId, boolean feels) {
         try {
-            Optional<ReviewEntity> reviewOptional = reviewRepository.findByReviewNumber(reviewNumber);
-            if(reviewOptional.isEmpty()) return PatchReviewResponseDto.notExistProduct();
-            reviewEntity = reviewOptional.get();
-
-            List<String> list;
-            if(isLike == "true") { list = reviewEntity.getLiked(); }
-            else  { list = reviewEntity.getDislike(); }
+            boolean existedReview = reviewRepository.existsByReviewNumber(reviewNumber);
+            if(!existedReview) return GetReviewResponseDto.notExistProduct();
+            ReviewEntity reviewEntity = reviewRepository.findByReviewNumber(reviewNumber);
 
             boolean existedUser = userRepository.existsByUserId(userId);
             if(!existedUser) return GetUserResponseDto.notExistUser();
             UserEntity userEntity = userRepository.findByUserId(userId);
 
-            for (String element : list) {
-                if (element.equals(userEntity.getUserId())) {
-                    boolean existedLike = userRepository.existsByUserId(element);
-                    if(!existedLike) return GetUserResponseDto.notExistUser();
-                    UserEntity likeUser = userRepository.findByUserId(element);
+            boolean existProduct = productRepository.existsByProductId(reviewEntity.getProductId());
+            if(!existProduct) return GetProductResponseDto.notExistProduct();
+            ProductEntity productEntity = productRepository.findByProductId(reviewEntity.getProductId());
 
-                    if(isActive == "true") {
-                        list.remove(element);
-                        break;
-                    }
-                    list.add(element);
+            //List<ReviewEntity> feelsList;
+            List<String> userFeelsList;
+            List<String> reviewFeelsList;
+            if(feels) {
+                userFeelsList = userEntity.getLikedReviewList();
+                reviewFeelsList = reviewEntity.getLikedUserList();
+            }
+            else {
+                userFeelsList = userEntity.getDislikedReviewList();
+                reviewFeelsList = reviewEntity.getDislikedUserList();
+            }
+//            다대다 실패후 주석
+//            Iterator<ReviewEntity> feelsIterator = feelsList.iterator();
+
+            boolean foundEquals = false;
+//            while(feelsIterator.hasNext()) {
+//                if (feelsIterator.next().equals(reviewEntity)) {
+//                    foundEquals = true;
+//                    feelsIterator.remove();
+//                    break;
+//                }
+//            }
+
+            for(String id : reviewFeelsList) {
+                if(id.equals(userId)) {
+                    reviewFeelsList.remove(id);
+                    userFeelsList.remove(id);
                     break;
                 }
             }
+
+            if(!foundEquals) {
+                userFeelsList.add(userId);
+                reviewFeelsList.add(userId);
+            }
+            reviewRepository.save(reviewEntity);
+            userRepository.save(userEntity);
         }
         catch(Exception e) {
             return ResponseDto.databaseError();

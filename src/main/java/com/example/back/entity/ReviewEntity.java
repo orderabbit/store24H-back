@@ -27,8 +27,18 @@ public class ReviewEntity {
     private String userId;
     private String productId;
     private int rates;
-    private List<String> liked;
-    private List<String> dislike;
+
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    private ProductEntity targetProduct;
+
+    private List<String> likedUserList;
+    private List<String> dislikedUserList;
+
+//    @OneToMany(mappedBy = "likedReviewEntity")
+//    private List<UserEntity> likedUserList;
+//    @OneToMany(mappedBy = "dislikedReviewEntity")
+//    private List<UserEntity> dislikedUserList;
+//    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 
     public ReviewEntity(PostReviewRequestDto dto, String productId, String userId) {
 
@@ -42,7 +52,7 @@ public class ReviewEntity {
         this.productId = productId;
 
         rates = dto.getRates();
-        liked = new ArrayList<>();
-        dislike = new ArrayList<>();
+        likedUserList = new ArrayList<>();
+        dislikedUserList = new ArrayList<>();
     }
 }

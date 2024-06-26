@@ -1,8 +1,9 @@
 package com.example.back.repository.resultSet;
 
 public interface GetReviewListResultSet {
-
-    String getNickname();
+    String getReview_number();
+    String getUser_id();
     String getWriteDatetime();
-    String getContent();
+    String getReview();
+    int getRates();
 }

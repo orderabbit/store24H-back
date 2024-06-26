@@ -40,12 +40,11 @@ public class ProductController {
     @PatchMapping("/{reviewNumber}/feels")
     public ResponseEntity<? super PatchReviewResponseDto> PatchReview(
             @PathVariable("reviewNumber") int reviewNumber,
-            @RequestParam("feels") String isLike,
-            @RequestParam("isActive") String isActive,
+            @RequestParam("feels") boolean feels,
             @AuthenticationPrincipal String userId
     ) {
-        ResponseEntity<? super PatchReviewResponseDto> response = productService.patchReview(reviewNumber, userId, isLike, isActive);
-        return response;
+        ResponseEntity<? super PatchReviewResponseDto> response = productService.patchReview(reviewNumber, userId, feels);
+        return null;
     }
 
     @GetMapping("/{productId}/review-list")
@@ -58,7 +57,7 @@ public class ProductController {
 
     @GetMapping(value = {"/search"})
     public ResponseEntity<? super SearchProductResponseDto> getSearchBoardList(
-            @RequestParam String keyword
+            @RequestParam("keyword") String keyword
     ) {
         ResponseEntity<? super SearchProductResponseDto> response = productService.getSearchProductList(keyword);
         return response;
@@ -66,10 +65,11 @@ public class ProductController {
 
     @GetMapping("/detail/{productId}")
     public ResponseEntity<? super GetProductResponseDto> getProduct(
-            @PathVariable("productId") String productId,
+            @PathVariable("productId") Long productId,
             @RequestParam(value = "type", required = false, defaultValue = "primary") String type
     ) {
-        ResponseEntity<? super GetProductResponseDto> response = productService.getProduct(productId, type);
+        String productId_ = String.valueOf(productId);
+        ResponseEntity<? super GetProductResponseDto> response = productService.getProduct(productId_, type);
         return response;
     }
 

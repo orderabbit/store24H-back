@@ -8,21 +8,23 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
+public interface ReviewRepository extends JpaRepository<ReviewEntity, Integer> {
 
-    Optional<ReviewEntity> findByReviewNumber(int reviewNumber);
+
+    boolean existsByReviewNumber (int reviewNumber);
+    ReviewEntity findByReviewNumber(int reviewNumber);
+
     @Query(
-            value=
-                    "SELECT " +
-                            "R.write_datetime AS writeDatetime, " +
-                            "R.review AS review " +
-                            "FROM review AS R " +
-                            "INNER JOIN user AS U ON R.user_id = U.user_id " +
-                            "WHERE U.product_id = ?1 " +
-                            "ORDER BY writeDatetime DESC",
+            value = "SELECT " +
+                                "R.review_number AS review_number, " +
+                                "R.write_datetime AS writeDatetime, " +
+                                "R.review AS review, " +
+                                "R.rates AS rates " +
+                                "FROM review AS R " +
+                                "INNER JOIN product AS P ON R.product_id = P.product_id " +
+                                "ORDER BY R.write_datetime DESC",
             nativeQuery = true
     )
     List<GetReviewListResultSet> getReviewList(String productId);
@@ -32,4 +34,5 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
 
     @Transactional
     void deleteByUserId(String userId);
+
 }

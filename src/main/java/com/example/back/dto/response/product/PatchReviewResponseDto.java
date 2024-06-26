@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class PatchReviewResponseDto extends ResponseDto{
+    private String feels;
+
     private PatchReviewResponseDto(){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
