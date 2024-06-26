@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class PostProductRequestDto {
-
     @NotBlank
     private String productId;
     @NotBlank
@@ -26,8 +25,6 @@ public class PostProductRequestDto {
     private String category2;
     @NotBlank
     private String category3;
-
     private List<String> productImageList;
-
     private List<String> secondaryProductImageList;
 }

@@ -19,5 +19,6 @@ public interface QuestionRepository extends JpaRepository<QuestionEntity, Long> 
             nativeQuery = true
     )
     QuestionEntity getQuestion(Long QuestionId);
+
     QuestionEntity findByQuestionId(Long QuestionId);
 }

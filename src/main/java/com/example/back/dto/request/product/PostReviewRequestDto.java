@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PostReviewRequestDto {
-
     @NotBlank
     private String review;
 }

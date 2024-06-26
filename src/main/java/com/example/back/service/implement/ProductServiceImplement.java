@@ -32,14 +32,13 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ResponseEntity<? super GetProductResponseDto> getProduct(String productId, String type) {
-
         GetProductResultSet resultSet = null;
         List<ImageEntity> primaryImages = new ArrayList<>();
         List<ImageEntity> secondaryImages = new ArrayList<>();
-
         try {
             resultSet = productRepository.getProduct(productId);
             if (resultSet == null) return GetProductResponseDto.notExistProduct();
+
             primaryImages = imageRepository.findByProductIdAndImageType(productId, "primary");
             secondaryImages = imageRepository.findByProductIdAndImageType(productId, "secondary");
 
@@ -53,7 +52,6 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<? super GetProductListResponseDto> getProductList() {
         List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
-
         try {
             productListViewEntities = productListViewRepository.findAll();
             if (productListViewEntities.size() == 0) return GetProductListResponseDto.notExistProduct();
@@ -67,9 +65,7 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ResponseEntity<? super GetReviewResponseDto> getReviewList(String productId) {
-
         List<GetReviewListResultSet> resultSets = new ArrayList<>();
-
         try {
             boolean existedProduct = productRepository.existsByProductId(productId);
             if (!existedProduct) return GetReviewResponseDto.notExistProduct();
@@ -86,7 +82,6 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<? super SearchProductResponseDto> getSearchProductList(String keyword) {
         List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
-
         try{
             productListViewEntities = productListViewRepository.findByCategory1ContainingOrCategory2ContainingOrCategory3Containing(keyword, keyword, keyword);
             if(productListViewEntities.size() == 0) return SearchProductResponseDto.notExistedProduct();
@@ -100,7 +95,6 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ResponseEntity<? super PostProductResponseDto> postProduct(PostProductRequestDto dto, String userId) {
-
         try {
             boolean existedUserId = userRepository.existsByUserId(userId);
             if (!existedUserId) return PostProductResponseDto.notExistUser();
@@ -110,12 +104,10 @@ public class ProductServiceImplement implements ProductService {
 
             ProductEntity productEntity = new ProductEntity(dto, userId);
             productRepository.save(productEntity);
-
             String productId = productEntity.getProductId();
 
             List<String> productImageList = dto.getProductImageList();
             List<ImageEntity> imageEntities = new ArrayList<>();
-
             for (String image : productImageList) {
                 ImageEntity imageEntity = new ImageEntity(productId, image, userId, "primary");
                 imageEntities.add(imageEntity);
@@ -151,11 +143,10 @@ public class ProductServiceImplement implements ProductService {
 
             productEntity.patchProduct(dto);
             productRepository.save(productEntity);
-
             imageRepository.deleteByProductId(productId);
+
             List<String> productImageList = dto.getProductImageList();
             List<ImageEntity> imageEntities = new ArrayList<>();
-
             for(String image: productImageList) {
                 ImageEntity imageEntity = new ImageEntity(productId, image, userId, "primary");
                 imageEntities.add(imageEntity);
@@ -187,7 +178,6 @@ public class ProductServiceImplement implements ProductService {
 
             ReviewEntity reviewEntity = new ReviewEntity(dto, productId, userId);
             reviewRepository.save(reviewEntity);
-
             productRepository.save(productEntity);
 
         } catch (Exception exception) {
@@ -200,7 +190,6 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<? super DeleteProductResponseDto> deleteProduct(String productId, String userId) {
         try{
-
             boolean existedUser = userRepository.existsByUserId(userId);
             if(!existedUser) return DeleteProductResponseDto.notExistedUser();
 

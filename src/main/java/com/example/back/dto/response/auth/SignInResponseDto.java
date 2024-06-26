@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class SignInResponseDto extends ResponseDto {
+
     private String token;
     private int expirationTime;
 
@@ -22,6 +23,7 @@ public class SignInResponseDto extends ResponseDto {
         SignInResponseDto responseBody = new SignInResponseDto(token);
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
+
     public static ResponseEntity<ResponseDto> SignInFail(){
         ResponseDto responseBody = new ResponseDto(ResponseCode.SIGN_IN_FAIL,ResponseMessage.SIGN_IN_FAIL);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);

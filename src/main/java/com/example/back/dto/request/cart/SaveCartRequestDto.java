@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaveCartRequestDto {
-
     private Long productId;
     private String title;
     private List<String> productImageList;

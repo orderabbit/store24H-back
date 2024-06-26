@@ -36,6 +36,7 @@ public class CartServiceImplement implements CartService {
             if (existingEntity.isPresent()) {
                 return SaveCartResponseDto.duplicatedProduct();
             }
+
             CartEntity cartEntity = new CartEntity(dto, userId);
             cartRepository.save(cartEntity);
 
@@ -54,6 +55,7 @@ public class CartServiceImplement implements CartService {
             if (!existedUser) return ListCartResponseDto.notExistUser();
 
             cartListViewEntities = cartRepository.findByUserId(userId);
+
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
@@ -68,8 +70,10 @@ public class CartServiceImplement implements CartService {
             if (cartEntityOptional.isEmpty()) {
                 return DeleteCartResponseDto.notExistedProduct();
             }
+
             CartEntity cartEntity = cartEntityOptional.get();
             cartRepository.delete(cartEntity);
+
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();

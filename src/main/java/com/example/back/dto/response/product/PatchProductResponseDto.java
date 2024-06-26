@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class PatchProductResponseDto extends ResponseDto {
+
     private PatchProductResponseDto(){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

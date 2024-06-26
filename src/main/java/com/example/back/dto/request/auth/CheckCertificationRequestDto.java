@@ -12,11 +12,9 @@ import lombok.Setter;
 public class CheckCertificationRequestDto {
     @NotBlank
     private String userId;
-
     @Email
     @NotBlank
     private String email;
-
     @NotBlank
     private String certificationNumber;
 
