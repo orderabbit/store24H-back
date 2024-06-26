@@ -3,6 +3,7 @@ package com.example.back.controller;
 import com.example.back.dto.request.user.ChangePasswordRequestDto;
 import com.example.back.dto.request.user.PasswordRecoveryRequestDto;
 import com.example.back.dto.request.user.PatchNicknameRequestDto;
+import com.example.back.dto.request.user.WithdrawalUserRequestDto;
 import com.example.back.dto.response.user.*;
 import com.example.back.service.UserService;
 import jakarta.validation.Valid;
@@ -53,9 +54,10 @@ public class UserController {
 
     @DeleteMapping("/withdrawal/{userId}")
     public ResponseEntity<? super WithdrawalUserResponseDto> withdrawalUser(
-            @PathVariable("userId") String userId
+            @PathVariable("userId") String userId,
+            @RequestBody @Valid WithdrawalUserRequestDto requestBody
     ) {
-        ResponseEntity<? super WithdrawalUserResponseDto> response = userService.withdrawalUser(userId);
+        ResponseEntity<? super WithdrawalUserResponseDto> response = userService.withdrawalUser(requestBody, userId);
         return response;
     }
 

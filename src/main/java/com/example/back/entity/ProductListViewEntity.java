@@ -39,8 +39,6 @@ public class ProductListViewEntity {
     private String category2;
     @Column(name = "category3")
     private String category3;
-    @Column(name = "user_id")
-    private String userId;
     @Column(name = "write_datetime")
     private String writeDatetime;
 

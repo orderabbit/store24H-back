@@ -12,4 +12,5 @@ public interface OrderItemRepository extends JpaRepository<OrderItemEntity, Stri
     List<OrderItemEntity> findByOrderListUserId(String userId);
     @Transactional
     void deleteByOrderListOrderId(String orderId);
+    List<OrderItemEntity> findByUserId(String userId);
 }
