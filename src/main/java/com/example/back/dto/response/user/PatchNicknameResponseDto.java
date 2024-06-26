@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class PatchNicknameResponseDto extends ResponseDto {
+
     private PatchNicknameResponseDto(){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

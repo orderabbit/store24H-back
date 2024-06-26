@@ -24,16 +24,12 @@ public class OrderListEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long listId;
-
     @Column(name = "order_id")
     private String orderId;
-
     @Column(name = "user_id")
     private String userId;
-
     @Column(name = "order_datetime")
     private String orderDatetime;
-
     @OneToMany(mappedBy = "orderList", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonBackReference
     private List<OrderItemEntity> items;
