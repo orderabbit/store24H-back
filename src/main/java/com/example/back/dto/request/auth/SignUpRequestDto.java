@@ -13,7 +13,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequestDto {
-
     @NotBlank
     private String userId;
     @NotBlank

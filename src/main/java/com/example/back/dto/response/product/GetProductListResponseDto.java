@@ -12,6 +12,7 @@ import java.util.List;
 
 @Getter
 public class GetProductListResponseDto extends ResponseDto {
+
     private List<ProductListViewEntity> items;
 
     public GetProductListResponseDto(List<ProductListViewEntity> items) {

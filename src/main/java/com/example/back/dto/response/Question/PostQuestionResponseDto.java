@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 public class PostQuestionResponseDto extends ResponseDto {
+
     private PostQuestionResponseDto(){super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);}
+
     public static ResponseEntity<PostQuestionResponseDto> success(){
         PostQuestionResponseDto responseBody = new PostQuestionResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(responseBody);

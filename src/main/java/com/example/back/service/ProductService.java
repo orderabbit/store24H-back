@@ -5,7 +5,9 @@ import com.example.back.dto.request.product.PostProductRequestDto;
 import com.example.back.dto.request.product.PostReviewRequestDto;
 import com.example.back.dto.response.product.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface ProductService {
     ResponseEntity<? super GetProductResponseDto> getProduct(String productId, String type);
     ResponseEntity<? super GetProductListResponseDto> getProductList();

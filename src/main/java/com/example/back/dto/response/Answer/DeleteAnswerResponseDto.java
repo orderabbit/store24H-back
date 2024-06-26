@@ -16,6 +16,7 @@ public class DeleteAnswerResponseDto extends ResponseDto {
         DeleteAnswerResponseDto result = new DeleteAnswerResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
     public static ResponseEntity<ResponseDto> notExistedAnswer(){
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_ANSWER,ResponseMessage.NOT_EXISTED_ANSWER);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);

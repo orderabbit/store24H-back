@@ -39,7 +39,6 @@ public class ProductEntity {
         Date now = Date.from(Instant.now());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String writeDatetime = simpleDateFormat.format(now);
-
         this.productId = dto.getProductId();
         this.title = dto.getTitle();
         this.content = dto.getContent();

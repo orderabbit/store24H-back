@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ChangePasswordResponseDto extends ResponseDto {
+
     private ChangePasswordResponseDto(){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

@@ -2,10 +2,11 @@ package com.example.back.service.implement;
 
 import com.example.back.dto.request.user.ChangePasswordRequestDto;
 import com.example.back.dto.request.user.PatchNicknameRequestDto;
+import com.example.back.dto.request.user.WithdrawalUserRequestDto;
 import com.example.back.dto.response.ResponseDto;
 import com.example.back.dto.response.user.*;
-import com.example.back.entity.UserEntity;
-import com.example.back.repository.UserRepository;
+import com.example.back.entity.*;
+import com.example.back.repository.*;
 import com.example.back.service.EmailService;
 import com.example.back.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplement implements UserService {
 
     private final UserRepository userRepository;
+    private final ReviewRepository reviewRepository;
+    private final QuestionRepository questionRepository;
+    private final OrderListRepository orderListRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
+    private final AnswerRepository answerRepository;
+    private final PaymentRepository paymentRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
 
@@ -29,7 +39,6 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public ResponseEntity<? super GetUserResponseDto> getUser(String userId) {
-
         UserEntity userEntity = null;
         try {
             userEntity = userRepository.findByUserId(userId);
@@ -72,6 +81,7 @@ public class UserServiceImplement implements UserService {
             userRepository.save(userEntity);
 
             log.info("User {} changed password successfully.", userId);
+
         } catch (Exception exception) {
             log.error("Error occurred while changing password for user {}.", userId, exception);
             return ResponseDto.databaseError();
@@ -81,16 +91,16 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public ResponseEntity<? super PatchNicknameResponseDto> patchNickname(PatchNicknameRequestDto dto, String userId) {
-
         try {
             UserEntity userEntity = userRepository.findByUserId(userId);
             if (userEntity == null) PatchNicknameResponseDto.notExistUser();
 
             String nickname = dto.getNickname();
             boolean existedNickname = userRepository.existsByNickname(nickname);
-            if (existedNickname) return PatchNicknameResponseDto.duplicateNickname();
 
+            if (existedNickname) return PatchNicknameResponseDto.duplicateNickname();
             userEntity.setNickname(nickname);
+
             userRepository.save(userEntity);
 
         } catch (Exception exception) {
@@ -101,15 +111,35 @@ public class UserServiceImplement implements UserService {
     }
 
     @Override
-    public ResponseEntity<? super WithdrawalUserResponseDto> withdrawalUser(String userId) {
+    public ResponseEntity<? super WithdrawalUserResponseDto> withdrawalUser(WithdrawalUserRequestDto dto, String userId) {
         try {
             UserEntity userEntity = userRepository.findByUserId(userId);
+            List<CartEntity> cartEntity = cartRepository.findByUserId(userId);
+            List<ReviewEntity> reviewEntity = reviewRepository.findByUserId(userId);
+            List<QuestionEntity> questionEntity = questionRepository.findByUserId(userId);
+            List<OrderListEntity> orderListEntity = orderListRepository.findByUserId(userId);
+            List<ProductEntity> productEntity = productRepository.findByUserId(userId);
+            List<OrderItemEntity> orderItemEntity = orderItemRepository.findByUserId(userId);
+            List<PaymentEntity> paymentEntity = paymentRepository.findByCustomerId(userId);
+            List<AnswerEntity> answerEntity = answerRepository.findByUserId(userId);
+
+            String currentPassword = dto.getPassword();
+            if (!passwordEncoder.matches(currentPassword, userEntity.getPassword()))
+                return WithdrawalUserResponseDto.wrongPassword();
+
             if (userEntity == null) return WithdrawalUserResponseDto.notExistedUser();
 
-//            if (!passwordEncoder.matches(password, userEntity.getPassword())) return WithdrawalUserResponseDto.wrongPassword();
-
+            cartRepository.deleteAll(cartEntity);
+            orderItemRepository.deleteAll(orderItemEntity);
+            orderListRepository.deleteAll(orderListEntity);
+            paymentRepository.deleteAll(paymentEntity);
+            answerRepository.deleteAll(answerEntity);
+            questionRepository.deleteAll(questionEntity);
+            reviewRepository.deleteAll(reviewEntity);
+            productRepository.deleteAll(productEntity);
             userRepository.delete(userEntity);
             log.info("User {} deleted successfully.", userId);
+
         } catch (Exception exception) {
             log.error("Error occurred while deleting user {}.", userId, exception);
             return ResponseDto.databaseError();
@@ -125,13 +155,13 @@ public class UserServiceImplement implements UserService {
             if (userEntity == null) return PasswordRecoveryResponseDto.notExistUser();
 
             String temporaryPassword = generateTemporaryPassword();
-
             userEntity.setPassword(passwordEncoder.encode(temporaryPassword));
+
             userRepository.save(userEntity);
 
-            String changePasswordUrl = "http://localhost:3000/password";
             String emailText = "임시 비밀번호는: " + temporaryPassword + " 입니다.\n" +
                     "로그인 후 비밀번호를 변경해주세요.";
+
             emailService.sendEmail(email, "임시 비밀번호", emailText);
 
         } catch (Exception exception) {
