@@ -17,6 +17,7 @@ public class GetAnswerResponseDto extends ResponseDto {
     private Long answerId;
     private String content;
     private String userId;
+
     private LocalDateTime createdAt;
 //    private Long questionId;
 public GetAnswerResponseDto(AnswerEntity answerEntity){
