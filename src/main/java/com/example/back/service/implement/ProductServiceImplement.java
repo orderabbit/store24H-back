@@ -54,7 +54,6 @@ public class ProductServiceImplement implements ProductService {
         List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
         try {
             productListViewEntities = productListViewRepository.findAll();
-            if (productListViewEntities.size() == 0) return GetProductListResponseDto.notExistProduct();
 
         } catch (Exception exception) {
             exception.printStackTrace();

@@ -38,7 +38,6 @@ public class ProductListItem {
         this.category1 = productListViewEntity.getCategory1();
         this.category2 = productListViewEntity.getCategory2();
         this.category3 = productListViewEntity.getCategory3();
-        this.userId = productListViewEntity.getUserId();
         this.writeDatetime = productListViewEntity.getWriteDatetime();
     }
 

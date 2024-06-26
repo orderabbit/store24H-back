@@ -7,14 +7,16 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
-
+import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity(name="question")
 @Table(name="question")
@@ -37,6 +39,8 @@ public class QuestionEntity {
     @NotNull
     @CreationTimestamp
     private LocalDate createdAt;
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AnswerEntity> answers;
 
     public QuestionEntity(PostQuestionRequestDto dto){
         this.title = dto.getTitle();

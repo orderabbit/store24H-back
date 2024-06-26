@@ -27,4 +27,6 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
 
     @Transactional
     void deleteByProductId(String productId);
+
+    List<ReviewEntity> findByUserId(String userId);
 }
