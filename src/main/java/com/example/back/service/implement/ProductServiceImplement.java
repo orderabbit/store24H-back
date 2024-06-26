@@ -51,6 +51,21 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
+    public ResponseEntity<? super GetProductListResponseDto> getProductList() {
+        List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
+
+        try {
+            productListViewEntities = productListViewRepository.findAll();
+            if (productListViewEntities.size() == 0) return GetProductListResponseDto.notExistProduct();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetProductListResponseDto.success(productListViewEntities);
+    }
+
+    @Override
     public ResponseEntity<? super GetReviewResponseDto> getReviewList(String productId) {
 
         List<GetReviewListResultSet> resultSets = new ArrayList<>();

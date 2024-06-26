@@ -22,7 +22,6 @@ public class ProductListViewEntity {
     @Id
     @Column(name = "id")
     private int id;
-
     @Column(name = "product_id")
     private String productId;
     @Column(name = "title")

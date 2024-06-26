@@ -37,6 +37,12 @@ public class ProductController {
         return response;
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<? super GetProductListResponseDto> getProductList() {
+        ResponseEntity<? super GetProductListResponseDto> response = productService.getProductList();
+        return response;
+    }
+
     @GetMapping("/{productId}/review-list")
     public ResponseEntity<? super GetReviewResponseDto> getCommentList(
             @PathVariable("productId") String produtId
