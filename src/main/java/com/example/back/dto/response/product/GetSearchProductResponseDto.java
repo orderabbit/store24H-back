@@ -11,6 +11,7 @@ import java.util.List;
 
 @Getter
 public class GetSearchProductResponseDto extends ResponseDto {
+
     private List<CartEntity> items;
 
     public GetSearchProductResponseDto(List<CartEntity> items) {

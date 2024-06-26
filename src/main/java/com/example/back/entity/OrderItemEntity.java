@@ -20,7 +20,6 @@ public class OrderItemEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     @JsonManagedReference

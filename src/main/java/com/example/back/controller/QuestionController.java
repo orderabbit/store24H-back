@@ -17,13 +17,15 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("")
-    public ResponseEntity<? super PostQuestionResponseDto> postQuestion(@RequestBody @Valid PostQuestionRequestDto requestBody){
+    public ResponseEntity<? super PostQuestionResponseDto> postQuestion(
+            @RequestBody @Valid PostQuestionRequestDto requestBody
+    ) {
         ResponseEntity<? super PostQuestionResponseDto> response = questionService.postQuestion(requestBody);
-        return  response;
+        return response;
     }
 
     @GetMapping("/list")
-    public ResponseEntity<? super GetAllQuestionResponseDto> getAllQuestions(){
+    public ResponseEntity<? super GetAllQuestionResponseDto> getAllQuestions() {
         ResponseEntity<? super GetAllQuestionResponseDto> response = questionService.getAllQuestions();
         return response;
     }
@@ -31,15 +33,17 @@ public class QuestionController {
     @GetMapping("/detail/{questionId}")
     public ResponseEntity<? super GetQuestionResponseDto> getQuestion(
             @PathVariable("questionId") Long questionId
-    ){ ResponseEntity<? super GetQuestionResponseDto> response = questionService.getQuestion(questionId);
-        return response;}
+    ) {
+        ResponseEntity<? super GetQuestionResponseDto> response = questionService.getQuestion(questionId);
+        return response;
+    }
 
     @PatchMapping("/update/{questionId}")
     public ResponseEntity<? super PatchQuestionResponseDto> patchQuestion(
             @RequestBody @Valid PatchQuestionRequestDto requestBody,
             @PathVariable("questionId") Long questionId
-    ){
-        ResponseEntity<? super PatchQuestionResponseDto>response = questionService.patchQuestion(requestBody, questionId);
+    ) {
+        ResponseEntity<? super PatchQuestionResponseDto> response = questionService.patchQuestion(requestBody, questionId);
         return response;
     }
 
@@ -47,7 +51,7 @@ public class QuestionController {
     public ResponseEntity<? super DeleteQuestionResponseDto> deleteQuestion(
             @PathVariable("questionId") Long questionId,
             @AuthenticationPrincipal String userId
-    ){
+    ) {
         ResponseEntity<? super DeleteQuestionResponseDto> response = questionService.deleteQuestion(questionId);
         return response;
     }

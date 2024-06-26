@@ -18,7 +18,6 @@ import java.util.List;
 @Entity(name = "product_list_view")
 @Table(name = "product_list_view")
 public class ProductListViewEntity {
-
     @Id
     @Column(name = "id")
     private int id;

@@ -29,7 +29,6 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public ResponseEntity<? super GetUserResponseDto> getUser(String userId) {
-
         UserEntity userEntity = null;
         try {
             userEntity = userRepository.findByUserId(userId);
@@ -72,6 +71,7 @@ public class UserServiceImplement implements UserService {
             userRepository.save(userEntity);
 
             log.info("User {} changed password successfully.", userId);
+
         } catch (Exception exception) {
             log.error("Error occurred while changing password for user {}.", userId, exception);
             return ResponseDto.databaseError();
@@ -81,16 +81,16 @@ public class UserServiceImplement implements UserService {
 
     @Override
     public ResponseEntity<? super PatchNicknameResponseDto> patchNickname(PatchNicknameRequestDto dto, String userId) {
-
         try {
             UserEntity userEntity = userRepository.findByUserId(userId);
             if (userEntity == null) PatchNicknameResponseDto.notExistUser();
 
             String nickname = dto.getNickname();
             boolean existedNickname = userRepository.existsByNickname(nickname);
-            if (existedNickname) return PatchNicknameResponseDto.duplicateNickname();
 
+            if (existedNickname) return PatchNicknameResponseDto.duplicateNickname();
             userEntity.setNickname(nickname);
+
             userRepository.save(userEntity);
 
         } catch (Exception exception) {
@@ -103,13 +103,13 @@ public class UserServiceImplement implements UserService {
     @Override
     public ResponseEntity<? super WithdrawalUserResponseDto> withdrawalUser(String userId) {
         try {
+
             UserEntity userEntity = userRepository.findByUserId(userId);
             if (userEntity == null) return WithdrawalUserResponseDto.notExistedUser();
 
-//            if (!passwordEncoder.matches(password, userEntity.getPassword())) return WithdrawalUserResponseDto.wrongPassword();
-
             userRepository.delete(userEntity);
             log.info("User {} deleted successfully.", userId);
+
         } catch (Exception exception) {
             log.error("Error occurred while deleting user {}.", userId, exception);
             return ResponseDto.databaseError();
@@ -125,13 +125,13 @@ public class UserServiceImplement implements UserService {
             if (userEntity == null) return PasswordRecoveryResponseDto.notExistUser();
 
             String temporaryPassword = generateTemporaryPassword();
-
             userEntity.setPassword(passwordEncoder.encode(temporaryPassword));
+
             userRepository.save(userEntity);
 
-            String changePasswordUrl = "http://localhost:3000/password";
             String emailText = "임시 비밀번호는: " + temporaryPassword + " 입니다.\n" +
                     "로그인 후 비밀번호를 변경해주세요.";
+
             emailService.sendEmail(email, "임시 비밀번호", emailText);
 
         } catch (Exception exception) {

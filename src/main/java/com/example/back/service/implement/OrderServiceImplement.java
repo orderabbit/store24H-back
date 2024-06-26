@@ -60,8 +60,10 @@ public class OrderServiceImplement implements OrderService {
             if (orderListEntities.isEmpty()) {
                 return DeleteOrderListResponseDto.notExistedOrder();
             }
+
             orderItemRepository.deleteByOrderListOrderId(orderId);
             orderListRepository.deleteByOrderId(orderId);
+
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
