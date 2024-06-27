@@ -24,6 +24,7 @@ public class ReviewEntity {
     private String writeDatetime;
     private String userId;
     private String productId;
+    private String rates;
 
     public ReviewEntity(PostReviewRequestDto dto, String productId, String userId) {
         Date now = Date.from(Instant.now());
@@ -33,5 +34,6 @@ public class ReviewEntity {
         this.writeDatetime = writeDatetime;
         this.userId = userId;
         this.productId = productId;
+        this.rates = dto.getRates();
     }
 }

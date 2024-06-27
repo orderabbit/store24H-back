@@ -10,5 +10,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PostReviewRequestDto {
     @NotBlank
+    private String productId;
+    @NotBlank
+    private String userId;
+    @NotBlank
+    private String rates;
+    @NotBlank
     private String review;
 }

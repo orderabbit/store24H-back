@@ -4,7 +4,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GetReviewListResultSet {
+    String getReviewId();
+    String getRates();
     String getNickname();
     String getWriteDatetime();
-    String getContent();
+    String getReview();
 }
