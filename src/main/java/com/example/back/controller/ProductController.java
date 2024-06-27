@@ -52,10 +52,10 @@ public class ProductController {
 
     @GetMapping(value = {"/search"})
     public ResponseEntity<? super SearchProductResponseDto> getSearchBoardList(
-            @RequestParam String keyword
+            @RequestParam("keyword") String keyword
     ) {
         ResponseEntity<? super SearchProductResponseDto> response = productService.getSearchProductList(keyword);
-        return response;
+        return null;
     }
 
     @GetMapping("/detail/{productId}")
