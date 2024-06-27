@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class WithdrawalUserResponseDto extends ResponseDto {
+
     private WithdrawalUserResponseDto(){
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }

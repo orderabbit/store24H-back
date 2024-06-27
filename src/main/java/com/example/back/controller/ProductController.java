@@ -27,37 +27,32 @@ public class ProductController {
         return response;
     }
 
-    @PostMapping("/{productId}/review")
+    @PostMapping("/review")
     public ResponseEntity<? super PostReviewResponseDto> postReview(
             @RequestBody @Valid PostReviewRequestDto requestBody,
-            @PathVariable("productId") String productId,
             @AuthenticationPrincipal String userId
     ) {
-        ResponseEntity<? super PostReviewResponseDto> response = productService.postReview(requestBody, productId, userId);
+        ResponseEntity<? super PostReviewResponseDto> response = productService.postReview(requestBody, userId);
         return response;
     }
 
-    @PatchMapping("/{reviewNumber}/feels")
-    public ResponseEntity<? super PatchReviewResponseDto> PatchReview(
-            @PathVariable("reviewNumber") int reviewNumber,
-            @RequestParam("feels") boolean feels,
-            @AuthenticationPrincipal String userId
-    ) {
-        ResponseEntity<? super PatchReviewResponseDto> response = productService.patchReview(reviewNumber, userId, feels);
-        return null;
+    @GetMapping("/list")
+    public ResponseEntity<? super GetProductListResponseDto> getProductList() {
+        ResponseEntity<? super GetProductListResponseDto> response = productService.getProductList();
+        return response;
     }
 
     @GetMapping("/{productId}/review-list")
-    public ResponseEntity<? super GetReviewResponseDto> getCommentList(
+    public ResponseEntity<? super GetReviewResponseDto> getReviewList(
             @PathVariable("productId") String productId
     ) {
-        ResponseEntity<? super GetReviewResponseDto> response = productService.getReviewList(productId);
-        return response;
+        ResponseEntity<? super GetReviewResponseDto> reponse = productService.getReviewList(productId);
+        return reponse;
     }
 
     @GetMapping(value = {"/search"})
     public ResponseEntity<? super SearchProductResponseDto> getSearchBoardList(
-            @RequestParam("keyword") String keyword
+            @RequestParam String keyword
     ) {
         ResponseEntity<? super SearchProductResponseDto> response = productService.getSearchProductList(keyword);
         return response;
@@ -65,11 +60,10 @@ public class ProductController {
 
     @GetMapping("/detail/{productId}")
     public ResponseEntity<? super GetProductResponseDto> getProduct(
-            @PathVariable("productId") Long productId,
+            @PathVariable("productId") String productId,
             @RequestParam(value = "type", required = false, defaultValue = "primary") String type
     ) {
-        String productId_ = String.valueOf(productId);
-        ResponseEntity<? super GetProductResponseDto> response = productService.getProduct(productId_, type);
+        ResponseEntity<? super GetProductResponseDto> response = productService.getProduct(productId, type);
         return response;
     }
 
@@ -89,6 +83,15 @@ public class ProductController {
             @AuthenticationPrincipal String userId
     ) {
         ResponseEntity<? super DeleteProductResponseDto> response = productService.deleteProduct(productId, userId);
+        return response;
+    }
+
+    @DeleteMapping("/review/delete/{reviewNumber}")
+    public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(
+            @PathVariable("reviewNumber") Integer reviewNumber,
+            @AuthenticationPrincipal String userId
+    ) {
+        ResponseEntity<? super DeleteReviewResponseDto> response = productService.deleteReview(reviewNumber, userId);
         return response;
     }
 }

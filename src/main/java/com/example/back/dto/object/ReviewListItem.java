@@ -13,18 +13,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReviewListItem {
-    private String review_number;
-    private String user_id;
+
+    private String reviewNumber;
+    private String userId;
+    private String rates;
     private String writeDatetime;
     private String review;
-    private int rates;
 
     public ReviewListItem(GetReviewListResultSet resultSet){
-        this.review_number = resultSet.getReview_number();
-        this.user_id = resultSet.getUser_id();
         this.writeDatetime = resultSet.getWriteDatetime();
-        this.review = resultSet.getReview();
         this.rates = resultSet.getRates();
+        this.review = resultSet.getReview();
+        this.reviewNumber = resultSet.getReviewId();
     }
 
     public static List<ReviewListItem> copyList(List<GetReviewListResultSet> resultSets){

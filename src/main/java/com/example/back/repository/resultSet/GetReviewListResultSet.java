@@ -1,9 +1,12 @@
 package com.example.back.repository.resultSet;
 
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface GetReviewListResultSet {
-    String getReview_number();
-    String getUser_id();
+    String getReviewId();
+    String getRates();
+    String getNickname();
     String getWriteDatetime();
     String getReview();
-    int getRates();
 }

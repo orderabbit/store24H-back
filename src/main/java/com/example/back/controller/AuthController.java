@@ -20,7 +20,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/oauth-response")
-    public void handleOAuthResponse(@RequestParam("token") String token, HttpServletResponse response) throws IOException {
+    public void handleOAuthResponse(
+            @RequestParam("token") String token, HttpServletResponse response) throws IOException {
         //잘 안되면 롤백
         String redirectUrl = "http://3.35.30.191:4040?token=" + token;
         response.sendRedirect(redirectUrl);
@@ -71,6 +72,22 @@ public class AuthController {
             @RequestBody @Valid SignInRequestDto requestBody
     ) {
         ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
+        return response;
+    }
+
+    @PostMapping("/admin-sign-up")
+    public ResponseEntity<? super AdminSignUpResponseDto> adminSignUp(
+            @RequestBody @Valid AdminSignUpRequestDto requestBody
+    ) {
+        ResponseEntity<? super AdminSignUpResponseDto> response = authService.adminSignUp(requestBody);
+        return response;
+    }
+
+    @PostMapping("/admin-sign-in")
+    public ResponseEntity<? super AdminSignInResponseDto> adminSignIn(
+            @RequestBody @Valid AdminSignInRequestDto requestBody
+    ) {
+        ResponseEntity<? super AdminSignInResponseDto> response = authService.adminSignIn(requestBody);
         return response;
     }
 }

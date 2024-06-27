@@ -5,8 +5,10 @@ import com.example.back.dto.request.product.PostProductRequestDto;
 import com.example.back.dto.request.product.PostReviewRequestDto;
 import com.example.back.dto.response.ResponseDto;
 import com.example.back.dto.response.product.*;
-import com.example.back.dto.response.user.GetUserResponseDto;
-import com.example.back.entity.*;
+import com.example.back.entity.ImageEntity;
+import com.example.back.entity.ProductEntity;
+import com.example.back.entity.ProductListViewEntity;
+import com.example.back.entity.ReviewEntity;
 import com.example.back.repository.*;
 import com.example.back.repository.resultSet.GetProductResultSet;
 import com.example.back.repository.resultSet.GetReviewListResultSet;
@@ -16,9 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,14 +32,13 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ResponseEntity<? super GetProductResponseDto> getProduct(String productId, String type) {
-
         GetProductResultSet resultSet = null;
         List<ImageEntity> primaryImages = new ArrayList<>();
         List<ImageEntity> secondaryImages = new ArrayList<>();
-
         try {
             resultSet = productRepository.getProduct(productId);
             if (resultSet == null) return GetProductResponseDto.notExistProduct();
+
             primaryImages = imageRepository.findByProductIdAndImageType(productId, "primary");
             secondaryImages = imageRepository.findByProductIdAndImageType(productId, "secondary");
 
@@ -51,10 +50,21 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
+    public ResponseEntity<? super GetProductListResponseDto> getProductList() {
+        List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
+        try {
+            productListViewEntities = productListViewRepository.findAll();
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetProductListResponseDto.success(productListViewEntities);
+    }
+
+    @Override
     public ResponseEntity<? super GetReviewResponseDto> getReviewList(String productId) {
-
         List<GetReviewListResultSet> resultSets = new ArrayList<>();
-
         try {
             boolean existedProduct = productRepository.existsByProductId(productId);
             if (!existedProduct) return GetReviewResponseDto.notExistProduct();
@@ -71,7 +81,6 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<? super SearchProductResponseDto> getSearchProductList(String keyword) {
         List<ProductListViewEntity> productListViewEntities = new ArrayList<>();
-
         try{
             productListViewEntities = productListViewRepository.findByCategory1ContainingOrCategory2ContainingOrCategory3Containing(keyword, keyword, keyword);
             if(productListViewEntities.size() == 0) return SearchProductResponseDto.notExistedProduct();
@@ -85,7 +94,6 @@ public class ProductServiceImplement implements ProductService {
 
     @Override
     public ResponseEntity<? super PostProductResponseDto> postProduct(PostProductRequestDto dto, String userId) {
-
         try {
             boolean existedUserId = userRepository.existsByUserId(userId);
             if (!existedUserId) return PostProductResponseDto.notExistUser();
@@ -95,12 +103,10 @@ public class ProductServiceImplement implements ProductService {
 
             ProductEntity productEntity = new ProductEntity(dto, userId);
             productRepository.save(productEntity);
-
             String productId = productEntity.getProductId();
 
             List<String> productImageList = dto.getProductImageList();
             List<ImageEntity> imageEntities = new ArrayList<>();
-
             for (String image : productImageList) {
                 ImageEntity imageEntity = new ImageEntity(productId, image, userId, "primary");
                 imageEntities.add(imageEntity);
@@ -136,11 +142,10 @@ public class ProductServiceImplement implements ProductService {
 
             productEntity.patchProduct(dto);
             productRepository.save(productEntity);
-
             imageRepository.deleteByProductId(productId);
+
             List<String> productImageList = dto.getProductImageList();
             List<ImageEntity> imageEntities = new ArrayList<>();
-
             for(String image: productImageList) {
                 ImageEntity imageEntity = new ImageEntity(productId, image, userId, "primary");
                 imageEntities.add(imageEntity);
@@ -162,7 +167,8 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<? super PostReviewResponseDto> postReview(PostReviewRequestDto dto, String productId, String userId) {
+    public ResponseEntity<? super PostReviewResponseDto> postReview(PostReviewRequestDto dto, String userId) {
+        String productId = dto.getProductId();
         try {
             ProductEntity productEntity = productRepository.findByProductId(productId);
             if (productEntity == null) return PostReviewResponseDto.notExistProduct();
@@ -172,7 +178,6 @@ public class ProductServiceImplement implements ProductService {
 
             ReviewEntity reviewEntity = new ReviewEntity(dto, productId, userId);
             reviewRepository.save(reviewEntity);
-
             productRepository.save(productEntity);
 
         } catch (Exception exception) {
@@ -185,7 +190,6 @@ public class ProductServiceImplement implements ProductService {
     @Override
     public ResponseEntity<? super DeleteProductResponseDto> deleteProduct(String productId, String userId) {
         try{
-
             boolean existedUser = userRepository.existsByUserId(userId);
             if(!existedUser) return DeleteProductResponseDto.notExistedUser();
 
@@ -208,61 +212,24 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<? super PatchReviewResponseDto> patchReview(int reviewNumber, String userId, boolean feels) {
-        try {
-            boolean existedReview = reviewRepository.existsByReviewNumber(reviewNumber);
-            if(!existedReview) return GetReviewResponseDto.notExistProduct();
-            ReviewEntity reviewEntity = reviewRepository.findByReviewNumber(reviewNumber);
-
+    public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(Integer reviewNumber, String userId) {
+        try{
             boolean existedUser = userRepository.existsByUserId(userId);
-            if(!existedUser) return GetUserResponseDto.notExistUser();
-            UserEntity userEntity = userRepository.findByUserId(userId);
+            if(!existedUser) return DeleteReviewResponseDto.notExistedUser();
 
-            boolean existProduct = productRepository.existsByProductId(reviewEntity.getProductId());
-            if(!existProduct) return GetProductResponseDto.notExistProduct();
-            ProductEntity productEntity = productRepository.findByProductId(reviewEntity.getProductId());
+            ReviewEntity reviewEntity = reviewRepository.findByReviewNumber(reviewNumber);
+            if(reviewEntity == null) return DeleteReviewResponseDto.notExistedReview();
 
-            //List<ReviewEntity> feelsList;
-            List<String> userFeelsList;
-            List<String> reviewFeelsList;
-            if(feels) {
-                userFeelsList = userEntity.getLikedReviewList();
-                reviewFeelsList = reviewEntity.getLikedUserList();
-            }
-            else {
-                userFeelsList = userEntity.getDislikedReviewList();
-                reviewFeelsList = reviewEntity.getDislikedUserList();
-            }
-//            다대다 실패후 주석
-//            Iterator<ReviewEntity> feelsIterator = feelsList.iterator();
+            String writerId = reviewEntity.getUserId();
+            boolean isWriter = writerId.equals(userId);
+            if(!isWriter) return DeleteReviewResponseDto.notPermission();
 
-            boolean foundEquals = false;
-//            while(feelsIterator.hasNext()) {
-//                if (feelsIterator.next().equals(reviewEntity)) {
-//                    foundEquals = true;
-//                    feelsIterator.remove();
-//                    break;
-//                }
-//            }
+            reviewRepository.delete(reviewEntity);
 
-            for(String id : reviewFeelsList) {
-                if(id.equals(userId)) {
-                    reviewFeelsList.remove(id);
-                    userFeelsList.remove(id);
-                    break;
-                }
-            }
-
-            if(!foundEquals) {
-                userFeelsList.add(userId);
-                reviewFeelsList.add(userId);
-            }
-            reviewRepository.save(reviewEntity);
-            userRepository.save(userEntity);
-        }
-        catch(Exception e) {
+        }catch (Exception exception){
+            exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-        return PatchReviewResponseDto.success();
+        return DeleteReviewResponseDto.success();
     }
 }

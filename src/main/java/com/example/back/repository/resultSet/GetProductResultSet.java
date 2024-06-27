@@ -1,7 +1,9 @@
 package com.example.back.repository.resultSet;
 
-public interface GetProductResultSet {
+import org.springframework.stereotype.Repository;
 
+@Repository
+public interface GetProductResultSet {
     String getProductId();
     String getTitle();
     String getContent();

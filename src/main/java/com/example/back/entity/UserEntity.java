@@ -1,5 +1,6 @@
 package com.example.back.entity;
 
+import com.example.back.dto.request.auth.AdminSignUpRequestDto;
 import com.example.back.dto.request.auth.SignUpRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -51,6 +52,16 @@ public class UserEntity {
         this.role = "ROLE_USER";
         this.likedReviewList = new ArrayList<>();
         this.dislikedReviewList = new ArrayList<>();
+    }
+
+    public UserEntity(AdminSignUpRequestDto dto){
+        this.userId = dto.getUserId();
+        this.password = dto.getPassword();
+        this.email = dto.getEmail();
+        this.nickname = dto.getNickname();
+        this.socialUser = false;
+        this.type = "app";
+        this.role = "ROLE_ADMIN";
     }
 
     public UserEntity(String userId, String email, String type, String nickname, String profileImage){
