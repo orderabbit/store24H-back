@@ -2,15 +2,16 @@ package com.example.back.entity;
 
 import com.example.back.dto.request.auth.AdminSignUpRequestDto;
 import com.example.back.dto.request.auth.SignUpRequestDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -33,6 +34,14 @@ public class UserEntity {
     private String type;
     private String role;
 
+    private List<String> likedReviewList;
+    private List<String> dislikedReviewList;
+
+//    @OneToMany(mappedBy = "likedUserEntity")
+//    private List<ReviewEntity> likedReviewList;
+//    @OneToMany(mappedBy = "likedUserEntity")
+//    private List<ReviewEntity> dislikedReviewList;
+
     public UserEntity(SignUpRequestDto dto){
         this.userId = dto.getUserId();
         this.password = dto.getPassword();
@@ -41,6 +50,8 @@ public class UserEntity {
         this.socialUser = false;
         this.type = "app";
         this.role = "ROLE_USER";
+        this.likedReviewList = new ArrayList<>();
+        this.dislikedReviewList = new ArrayList<>();
     }
 
     public UserEntity(AdminSignUpRequestDto dto){
