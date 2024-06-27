@@ -3,6 +3,7 @@ package com.example.back.entity;
 
 import com.example.back.dto.request.Answer.PatchAnswerRequestDto;
 import com.example.back.dto.request.Answer.PostAnswerRequestDto;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,9 @@ public class AnswerEntity {
     @NotNull
     @CreationTimestamp
     private LocalDateTime createdAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     @JoinColumn(name="question_id", nullable =false)
     private QuestionEntity question;
 

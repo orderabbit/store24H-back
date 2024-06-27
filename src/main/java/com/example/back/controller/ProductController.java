@@ -27,13 +27,12 @@ public class ProductController {
         return response;
     }
 
-    @PostMapping("/{productId}/review")
+    @PostMapping("/review")
     public ResponseEntity<? super PostReviewResponseDto> postReview(
             @RequestBody @Valid PostReviewRequestDto requestBody,
-            @PathVariable("productId") String productId,
             @AuthenticationPrincipal String userId
     ) {
-        ResponseEntity<? super PostReviewResponseDto> response = productService.postReview(requestBody, productId, userId);
+        ResponseEntity<? super PostReviewResponseDto> response = productService.postReview(requestBody, userId);
         return response;
     }
 
@@ -44,10 +43,10 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}/review-list")
-    public ResponseEntity<? super GetReviewResponseDto> getCommentList(
-            @PathVariable("productId") String produtId
+    public ResponseEntity<? super GetReviewResponseDto> getReviewList(
+            @PathVariable("productId") String productId
     ) {
-        ResponseEntity<? super GetReviewResponseDto> reponse = productService.getReviewList(produtId);
+        ResponseEntity<? super GetReviewResponseDto> reponse = productService.getReviewList(productId);
         return reponse;
     }
 
@@ -84,6 +83,15 @@ public class ProductController {
             @AuthenticationPrincipal String userId
     ) {
         ResponseEntity<? super DeleteProductResponseDto> response = productService.deleteProduct(productId, userId);
+        return response;
+    }
+
+    @DeleteMapping("/review/delete/{reviewNumber}")
+    public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(
+            @PathVariable("reviewNumber") Integer reviewNumber,
+            @AuthenticationPrincipal String userId
+    ) {
+        ResponseEntity<? super DeleteReviewResponseDto> response = productService.deleteReview(reviewNumber, userId);
         return response;
     }
 }

@@ -3,6 +3,7 @@ package com.example.back.entity;
 
 import com.example.back.dto.request.Question.PatchQuestionRequestDto;
 import com.example.back.dto.request.Question.PostQuestionRequestDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public class QuestionEntity {
     @NotNull
     @CreationTimestamp
     private LocalDate createdAt;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AnswerEntity> answers;
 

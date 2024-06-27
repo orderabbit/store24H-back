@@ -15,11 +15,12 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
     @Query(
             value=
                     "SELECT " +
+                            "R.review_number AS reviewId, " +
                             "R.write_datetime AS writeDatetime, " +
-                            "R.review AS review " +
+                            "R.review AS review, " +
+                            "R.rates AS rates " +
                             "FROM review AS R " +
                             "INNER JOIN user AS U ON R.user_id = U.user_id " +
-                            "WHERE U.product_id = ?1 " +
                             "ORDER BY writeDatetime DESC",
             nativeQuery = true
     )
@@ -29,4 +30,5 @@ public interface ReviewRepository extends JpaRepository<ReviewEntity, String> {
     void deleteByProductId(String productId);
 
     List<ReviewEntity> findByUserId(String userId);
+    ReviewEntity findByReviewNumber(int reviewNumber);
 }
