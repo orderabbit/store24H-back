@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,28 +24,29 @@ public class AnswerServiceImplement implements AnswerService {
     private final QuestionRepository questionRepository;
 
     @Override
-    public ResponseEntity<? super GetAnswerResponseDto> getAnswer(Long questionId){
-        AnswerEntity answerEntity = null;
-        try{
-            answerEntity = answerRepository.getAnswer(questionId);
-            if(answerEntity == null) return GetAnswerResponseDto.notExistAnswer();
+    public ResponseEntity<? super GetAnswerResponseDto> getAnswer(Long questionId) {
+        List<AnswerEntity> answerEntities = new ArrayList<>();
+        try {
+            answerEntities = answerRepository.getAnswerByQuestionId(questionId);
+            if (answerEntities.isEmpty()) return GetAnswerResponseDto.notExistAnswer();
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
-        } return GetAnswerResponseDto.success(answerEntity);
+        }
+        return GetAnswerResponseDto.success(answerEntities);
     }
 
     @Override
-    public ResponseEntity<? super PostAnswerResponseDto> postAnswer(PostAnswerRequestDto dto){
-        try{
+    public ResponseEntity<? super PostAnswerResponseDto> postAnswer(PostAnswerRequestDto dto) {
+        try {
             AnswerEntity answerEntity = new AnswerEntity(dto);
             QuestionEntity question = questionRepository.findById(dto.getQuestionId()).get();
 
             answerEntity.setQuestion(question);
             answerRepository.save(answerEntity);
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
@@ -52,44 +54,47 @@ public class AnswerServiceImplement implements AnswerService {
     }
 
     @Override
-    public ResponseEntity<? super PatchAnswerResponseDto> patchAnswer(PatchAnswerRequestDto dto, Long AnswerId){
-        try{
+    public ResponseEntity<? super PatchAnswerResponseDto> patchAnswer(PatchAnswerRequestDto dto, Long AnswerId) {
+        try {
             AnswerEntity answerEntity = answerRepository.findByAnswerId(AnswerId);
-            if(answerEntity == null) return PatchAnswerResponseDto.notExistAnswer();
+            if (answerEntity == null) return PatchAnswerResponseDto.notExistAnswer();
 
             answerEntity.patchAnswer(dto);
             answerRepository.save(answerEntity);
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
-        } return PatchAnswerResponseDto.success();
+        }
+        return PatchAnswerResponseDto.success();
     }
 
     @Override
-    public ResponseEntity<? super DeleteAnswerResponseDto> deleteAnswer(Long answerId){
-        try{
+    public ResponseEntity<? super DeleteAnswerResponseDto> deleteAnswer(Long answerId) {
+        try {
             AnswerEntity answerEntity = answerRepository.findByAnswerId(answerId);
-            if(answerEntity == null) return DeleteAnswerResponseDto.notExistedAnswer();
+            if (answerEntity == null) return DeleteAnswerResponseDto.notExistedAnswer();
 
             answerRepository.delete(answerEntity);
 
-        } catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
-        } return DeleteAnswerResponseDto.success();
+        }
+        return DeleteAnswerResponseDto.success();
     }
 
     @Override
-    public ResponseEntity<? super GetAllAnswerResponseDto> getAllAnswers(){
+    public ResponseEntity<? super GetAllAnswerResponseDto> getAllAnswers() {
         List<AnswerEntity> answers = null;
-        try{
+        try {
             answers = answerRepository.findAll();
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
-        }return GetAllAnswerResponseDto.success(answers);
+        }
+        return GetAllAnswerResponseDto.success(answers);
     }
 
 

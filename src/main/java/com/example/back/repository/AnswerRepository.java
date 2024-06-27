@@ -14,11 +14,11 @@ public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
     @Query(
             value=
                     "SELECT * " +
-                            "FROM question AS B " +
-                            "WHERE question_id = ?1 ",
+                            "FROM answer AS A " +
+                            "WHERE question_id = :questionId ",
             nativeQuery = true
     )
-    AnswerEntity getAnswer(Long questionId);
+    List<AnswerEntity> getAnswerByQuestionId(Long questionId);
 
     List<AnswerEntity> findByUserId(String userId);
 }

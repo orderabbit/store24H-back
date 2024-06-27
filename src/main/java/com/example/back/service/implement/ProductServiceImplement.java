@@ -167,7 +167,8 @@ public class ProductServiceImplement implements ProductService {
     }
 
     @Override
-    public ResponseEntity<? super PostReviewResponseDto> postReview(PostReviewRequestDto dto, String productId, String userId) {
+    public ResponseEntity<? super PostReviewResponseDto> postReview(PostReviewRequestDto dto, String userId) {
+        String productId = dto.getProductId();
         try {
             ProductEntity productEntity = productRepository.findByProductId(productId);
             if (productEntity == null) return PostReviewResponseDto.notExistProduct();
@@ -208,5 +209,27 @@ public class ProductServiceImplement implements ProductService {
             return ResponseDto.databaseError();
         }
         return DeleteProductResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteReviewResponseDto> deleteReview(Integer reviewNumber, String userId) {
+        try{
+            boolean existedUser = userRepository.existsByUserId(userId);
+            if(!existedUser) return DeleteReviewResponseDto.notExistedUser();
+
+            ReviewEntity reviewEntity = reviewRepository.findByReviewNumber(reviewNumber);
+            if(reviewEntity == null) return DeleteReviewResponseDto.notExistedReview();
+
+            String writerId = reviewEntity.getUserId();
+            boolean isWriter = writerId.equals(userId);
+            if(!isWriter) return DeleteReviewResponseDto.notPermission();
+
+            reviewRepository.delete(reviewEntity);
+
+        }catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return DeleteReviewResponseDto.success();
     }
 }
