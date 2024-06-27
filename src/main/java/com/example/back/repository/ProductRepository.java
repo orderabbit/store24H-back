@@ -1,12 +1,15 @@
 package com.example.back.repository;
 
-import com.example.back.entity.ProductEntity;
-import com.example.back.repository.resultSet.GetProductResultSet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+<<<<<<< HEAD
+import com.example.back.entity.ProductEntity;
+import com.example.back.repository.resultSet.GetProductResultSet;
+=======
 import java.util.List;
+>>>>>>> 96fc2d490d6b50d9652daac205cd78a1d003a01a
 
 @Repository
 public interface ProductRepository extends JpaRepository<ProductEntity, String> {
