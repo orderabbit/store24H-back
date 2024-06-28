@@ -38,7 +38,7 @@ public class AnswerController {
         return response;
     }
 
-    @PatchMapping("update/{answerId}")
+    @PatchMapping("/update/{answerId}")
     public ResponseEntity<? super PatchAnswerResponseDto> patchAnswer(
             @RequestBody @Valid PatchAnswerRequestDto requestBody,
             @PathVariable("answerId") Long answerId
