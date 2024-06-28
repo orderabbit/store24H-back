@@ -55,7 +55,7 @@ public class ProductController {
             @RequestParam("keyword") String keyword
     ) {
         ResponseEntity<? super SearchProductResponseDto> response = productService.getSearchProductList(keyword);
-        return null;
+        return response;
     }
 
     @GetMapping("/detail/{productId}")
