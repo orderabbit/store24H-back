@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-    final Path FILE_ROOT = Paths.get("/app/image").normalize();
+    final Path FILE_ROOT = Paths.get("/app/image/").normalize();
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
