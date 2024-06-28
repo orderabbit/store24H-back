@@ -10,12 +10,17 @@ import java.nio.file.Paths;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-    final Path FILE_ROOT = Paths.get("/app/image/").normalize();
+    final String FILE_PATH = "/app/image/";
+    final String FILE_URL = "http://3.35.30.191:4040/file/";
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/files/**")
-                .addResourceLocations(FILE_ROOT.toUri().toString());
+                .addResourceLocations("file:" + FILE_PATH);
+
+        registry
+                .addResourceHandler("/file/**")
+                .addResourceLocations(FILE_URL);
     }
 }
